@@ -1,233 +1,269 @@
 <?php
-
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
-
 /**
- * Short description for file
+ * Game short description for file
  *
- * Long description for file (if any)...
+ * Game long description for file (if any)...
  *
- * PHP version 5
+ * PHP version 7
  *
- * LICENSE: This source file is subject to version 3.01 of the PHP license
- * that is available through the world-wide-web at the following URI:
- * http://www.php.net/license/3_01.txt.  If you did not receive a copy of
- * the PHP License and are unable to obtain it through the web, please
- * send a note to license@php.net so we can mail you a copy immediately.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * @category   CategoryName
- * @package    PackageName
- * @author     Original Author <author@example.com>
- * @author     Another Author <another@example.com>
- * @copyright  1997-2005 The PHP Group
- * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    SVN: $Id$
- * @see        NetOther, Net_Sample::Net_Sample()
- * @since      File available since Release 1.2.0
- * @deprecated File deprecated in Release 2.0.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License <https://www.gnu.org/licenses/> for more
+ * details.
+ *
+ * @category  Game
+ * @package   Game
+ * @author    James Evans <info@jamesevans.net>
+ * @copyright 2018 James Evans
+ * @license   https://www.gnu.org/licenses/ GNU GPLv3
+ * @version   GIT: $Id$ In development.
+ * @link      https://www.jamesevans.net/
  */
 
-/**
- * This is a "Docblock Comment," also known as a "docblock."  The class'
- * docblock, below, contains a complete description of how to write these.
- */
-require_once 'PEAR.php';
+namespace FishingGame;
 
-// {{{ constants
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 /**
- * Methods return this if they succeed
+ * Constants
  */
-define('NET_SAMPLE_OK', 1);
-
-// }}}
-// {{{ GLOBALS
+const MIN_LINE_STRENTH = 1;
+const MAX_LINE_STRENTH = 4;
+const MIN_TARGET_SCORE = 10;
+const MAX_TARGET_SCORE = 40;
+const LIVES = 3;
+const FISH = array(
+    array('type' => 'Mackerel', 'number' => 10, 'strength' => 1),
+    array('type' => 'Bass', 'number' => 8, 'strength' => 2),
+    array('type' => 'Cod', 'number' => 6, 'strength' => 3),
+    array('type' => 'Tuna', 'number' => 4, 'strength' => 4),
+    array('type' => 'Shark', 'number' => 1, 'strength' => 5),
+);
 
 /**
- * The number of objects created
- * @global int $GLOBALS['_NET_SAMPLE_Count']
+ * Fish
  */
-$GLOBALS['_NET_SAMPLE_Count'] = 0;
 
-// }}}
-// {{{ Net_Sample
-
-/**
- * An example of how to write code to PEAR's standards
- *
- * Docblock comments start with "/**" at the top.  Notice how the "/"
- * lines up with the normal indenting and the asterisks on subsequent rows
- * are in line with the first asterisk.  The last line of comment text
- * should be immediately followed on the next line by the closing asterisk
- * and slash and then the item you are commenting on should be on the next
- * line below that.  Don't add extra lines.  Please put a blank line
- * between paragraphs as well as between the end of the description and
- * the start of the @tags.  Wrap comments before 80 columns in order to
- * ease readability for a wide variety of users.
- *
- * Docblocks can only be used for programming constructs which allow them
- * (classes, properties, methods, defines, includes, globals).  See the
- * phpDocumentor documentation for more information.
- * http://phpdoc.org/docs/HTMLSmartyConverter/default/phpDocumentor/tutorial_phpDocumentor.howto.pkg.html
- *
- * The Javadoc Style Guide is an excellent resource for figuring out
- * how to say what needs to be said in docblock comments.  Much of what is
- * written here is a summary of what is found there, though there are some
- * cases where what's said here overrides what is said there.
- * http://java.sun.com/j2se/javadoc/writingdoccomments/index.html#styleguide
- *
- * The first line of any docblock is the summary.  Make them one short
- * sentence, without a period at the end.  Summaries for classes, properties
- * and constants should omit the subject and simply state the object,
- * because they are describing things rather than actions or behaviors.
- *
- * Below are the tags commonly used for classes. @category through @version
- * are required.  The remainder should only be used when necessary.
- * Please use them in the order they appear here.  phpDocumentor has
- * several other tags available, feel free to use them.
- *
- * @category   CategoryName
- * @package    PackageName
- * @author     Original Author <author@example.com>
- * @author     Another Author <another@example.com>
- * @copyright  1997-2005 The PHP Group
- * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: @package_version@
- * @link       http://pear.php.net/package/PackageName
- * @see        NetOther, Net_Sample::Net_Sample()
- * @since      Class available since Release 1.2.0
- * @deprecated Class deprecated in Release 2.0.0
- */
-class Net_Sample
+class Fish
 {
-    // {{{ properties
+    public $type;
+    public $strength;
 
-    /**
-     * The status of foo's universe
-     *
-     * Potential values are 'good', 'fair', 'poor' and 'unknown'.
-     *
-     * @var string
-     */
-    var $foo = 'unknown';
-
-    /**
-     * The status of life
-     *
-     * Note that names of private properties or methods must be
-     * preceeded by an underscore.
-     *
-     * @var bool
-     * @access private
-     */
-    var $_good = true;
-
-    // }}}
-    // {{{ setFoo()
-
-    /**
-     * Registers the status of foo's universe
-     *
-     * Summaries for methods should use 3rd person declarative rather
-     * than 2nd person imperative, beginning with a verb phrase.
-     *
-     * Summaries should add description beyond the method's name. The
-     * best method names are "self-documenting", meaning they tell you
-     * basically what the method does.  If the summary merely repeats
-     * the method name in sentence form, it is not providing more
-     * information.
-     *
-     * Summary Examples:
-     *   + Sets the label              (preferred)
-     *   + Set the label               (avoid)
-     *   + This method sets the label  (avoid)
-     *
-     * Below are the tags commonly used for methods.  A @param tag is
-     * required for each parameter the method has.  The @return
-     * and @access tags are mandatory.  The @throws tag is required if
-     * the method uses exceptions.  @static is required if the method can
-     * be called statically.  The remainder should only be used when
-     * necessary.  Please use them in the order they appear here.
-     * phpDocumentor has several other tags available, feel free to use
-     * them.
-     *
-     * The @param tag contains the data type, then the parameter's
-     * name, followed by a description.  By convention, the first noun in
-     * the description is the data type of the parameter.  Articles like
-     * "a", "an", and  "the" can precede the noun.  The descriptions
-     * should start with a phrase.  If further description is necessary,
-     * follow with sentences.  Having two spaces between the name and the
-     * description aids readability.
-     *
-     * When writing a phrase, do not capitalize and do not end with a
-     * period:
-     *   + the string to be tested
-     *
-     * When writing a phrase followed by a sentence, do not capitalize the
-     * phrase, but end it with a period to distinguish it from the start
-     * of the next sentence:
-     *   + the string to be tested. Must use UTF-8 encoding.
-     *
-     * Return tags should contain the data type then a description of
-     * the data returned.  The data type can be any of PHP's data types
-     * (int, float, bool, string, array, object, resource, mixed)
-     * and should contain the type primarily returned.  For example, if
-     * a method returns an object when things work correctly but false
-     * when an error happens, say 'object' rather than 'mixed.'  Use
-     * 'void' if nothing is returned.
-     *
-     * Here's an example of how to format examples:
-     * <code>
-     * require_once 'Net/Sample.php';
-     *
-     * $s = new Net_Sample();
-     * if (PEAR::isError($s)) {
-     *     echo $s->getMessage() . "\n";
-     * }
-     * </code>
-     *
-     * Here is an example for non-php example or sample:
-     * <samp>
-     * pear install net_sample
-     * </samp>
-     *
-     * @param string $arg1 the string to quote
-     * @param int    $arg2 an integer of how many problems happened.
-     *                     Indent to the description's starting point
-     *                     for long ones.
-     *
-     * @return int the integer of the set mode used. FALSE if foo
-     *             foo could not be set.
-     * @throws exceptionclass [description]
-     *
-     * @access public
-     * @static
-     * @see Net_Sample::$foo, Net_Other::someMethod()
-     * @since Method available since Release 1.2.0
-     * @deprecated Method deprecated in Release 2.0.0
-     */
-    function setFoo($arg1, $arg2 = 0)
+    public function __construct($type, $strength)
     {
-        /*
-         * This is a "Block Comment."  The format is the same as
-         * Docblock Comments except there is only one asterisk at the
-         * top.  phpDocumentor doesn't parse these.
-         */
-        if ($arg1 == 'good' || $arg1 == 'fair') {
-            $this->foo = $arg1;
-            return 1;
-        } elseif ($arg1 == 'poor' && $arg2 > 1) {
-            $this->foo = 'poor';
-            return 2;
+        $this->type = $type;
+        $this->strength = $strength;
+    }
+}
+
+/**
+ * Sea
+ */
+
+class Sea
+{
+    public $fish = array();
+
+    public function __construct()
+    {
+        if (isset($_SESSION['fishInSea'])) {
+            $this->fish = $_SESSION['fishInSea'];
         } else {
-            return false;
+            $this->init();
         }
     }
 
-    // }}}
+    public function init()
+    {
+        $fishies = array();
+
+        foreach (FISH as $fish) {
+            for ($i = 0; $i < $fish['number']; $i++) {
+                array_push($fishies, new Fish(
+                    $fish['type'],
+                    $fish['strength']
+                ));
+            }
+        }
+
+        $this->fish = $fishies;
+        $_SESSION['fishInSea'] = $this->fish;
+    }
+
+
+    public function fishInTheSea()
+    {
+        $fishInTheSea = array();
+
+        foreach ($this->fish as $fish) {
+            if (!isset($fishInTheSea[$fish->type])) {
+                $fishInTheSea[$fish->type] = 1;
+            } else {
+                $fishInTheSea[$fish->type]++;
+            }
+        }
+
+        return $fishInTheSea;
+    }
+
+    public function catchFish($fishCaught)
+    {
+        $numFish = count($this->fish);
+        $randomFish = rand(0, $numFish-1);
+
+        $fish = $this->fish[$randomFish];
+        unset($this->fish[$randomFish]);
+        $this->fish = array_values(array_filter($this->fish));
+
+        $_SESSION['fishInSea'] = $this->fish;
+
+        $fishCaught->addCatch($fish);
+    }
 }
 
-// }}}
+/**
+ * Sea
+ */
+
+class FishCaught
+{
+    public $fish = array();
+
+    public function __construct()
+    {
+        if (isset($_SESSION['fishCaught'])) {
+            $this->fish = $_SESSION['fishCaught'];
+        } else {
+            $this->init();
+        }
+    }
+
+    public function init()
+    {
+        $this->fish = array();
+        $_SESSION['fishCaught'] = $this->fish;
+    }
+
+    public function fishCaught()
+    {
+        $fishCaught = array();
+
+        foreach ($this->fish as $fish) {
+            if (!isset($fishCaught[$fish->type])) {
+                $fishCaught[$fish->type] = 1;
+            } else {
+                $fishCaught[$fish->type]++;
+            }
+        }
+
+        return $fishCaught;
+    }
+
+    public function addCatch($fish)
+    {
+        array_push($this->fish, $fish);
+        $_SESSION['fishCaught'] = $this->fish;
+    }
+}
+
+/**
+ * The Bones
+ */
+
+session_start();
+
+$sea = new Sea();
+$fishCaught = new FishCaught();
+
+if (isset($_POST['fish'])) {
+    $fish = $sea->catchFish($fishCaught);
+}
+
+if (isset($_POST['reset'])) {
+    $sea->init();
+    $fishCaught->init();
+}
+
+/**
+ * Output buffer callback function
+ *
+ * @param string $buffer Output buffer
+ *
+ * @return string $buffer
+ */
+function OBCallback($buffer)
+{
+    return (str_replace("not working", "working", $buffer));
+}
+
+ob_start("FishingGame\OBCallback");
+?>
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>The HTML5 Herald</title>
+        <meta name="description" content="HTML5 Template">
+        <meta name="author" content="James Evans <info@jamesevans.net>">
+
+        <style type="text/css">
+            form {
+                margin-top: 1.5em;
+            }
+            form input {
+                font-size: 1.5em;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Fish in the sea</h1>
+        <table border="1">
+            <tr>
+                <th>Type</th>
+                <th>Number of fish</th>
+            </tr>
+<?php foreach ($sea->fishInTheSea() as $type => $number) { ?>
+            <tr>
+                <td><?php echo $type ?></td>
+                <td><?php echo $number ?></td>
+            </tr>
+<?php } ?>
+        </table>
+
+        <h1>Fish caught</h1>
+        <table border="1">
+            <tr>
+                <th>Type</th>
+                <th>Number of fish</th>
+            </tr>
+<?php foreach ($fishCaught->fishCaught() as $type => $number) { ?>
+            <tr>
+                <td><?php echo $type ?></td>
+                <td><?php echo $number ?></td>
+            </tr>
+<?php } ?>
+        </table>
+
+        <form method="post" action=".">
+            <input type="submit" name="fish" value="Sling your hook!" />
+            <input type="submit" name="reset" value="Start again" />
+        </form>
+    </body>
+</html>
+
+<?php
+ob_end_flush();
 
 /*
  * Local variables:
@@ -236,5 +272,3 @@ class Net_Sample
  * c-hanging-comment-ender-p: nil
  * End:
  */
-
-?>
